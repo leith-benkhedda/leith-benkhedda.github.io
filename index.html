@@ -86,7 +86,7 @@
             const beats = ((totalSeconds / 86.4) % 1000).toFixed(2);
             
             const normalTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById("internet-time").textContent = "@" + beats + " — " + normalTime;
+            document.getElementById("internet-time").textContent = "@" + beats + " • " + normalTime;
         }
         setInterval(updateSwatchInternetTime, 1000);
         window.onload = updateSwatchInternetTime;
