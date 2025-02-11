@@ -1,0 +1,152 @@
+        *****     *****  
+      **     ** **     **  
+     **       ***       **  
+     **                 **  
+      **               **  
+       **            **  
+         **        **  
+           **    **  
+             ** **  
+               *  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leïth Benkhedda</title>
+    <link id="favicon" rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=" />
+    <style>
+        body {
+            display: block;
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            padding: 15px;
+            margin: 0;
+            box-sizing: border-box;
+            background-color: #E5E4E2;
+            text-align: left;
+            height: 100vh;
+        }
+        .header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: start;
+            width: 100%;
+        }
+        .header div {
+            font-size: 12pt;
+        }
+        .links, .mobile-links {
+            text-align: left;
+            text-decoration: underline;
+        }
+        .links a, .mobile-links a {
+            text-decoration: none;
+            color: black !important;
+            margin-right: 0px;
+            text-decoration: underline;
+        }
+        .bio {
+            max-width: 800px;
+            padding-top: 0px;
+        }
+        .footer {
+            font-size: 12pt;
+            text-align: left;
+            padding-bottom: 10px;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .mobile-links {
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .header {
+                grid-template-columns: 1fr 1fr;
+            }
+            #internet-time {
+                text-align: right;
+                justify-self: end;
+            }
+            .links {
+                display: none;
+            }
+            .mobile-links {
+                display: block;
+                margin-top: 10px;
+            }
+        }
+        a:visited, a:hover, a:active {
+            color: black !important;
+            text-decoration: none !important;
+        }
+    </style>
+    <script>
+        function updateSwatchInternetTime() {
+            const now = new Date();
+            const utcHours = now.getUTCHours();
+            const utcMinutes = now.getUTCMinutes();
+            const utcSeconds = now.getUTCSeconds();
+            
+            const totalSeconds = (utcHours * 3600) + (utcMinutes * 60) + utcSeconds + 3600; // Adjust for Biel Mean Time (BMT) which is UTC+1
+            const beats = ((totalSeconds / 86.4) % 1000).toFixed(2);
+            
+            const normalTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById("internet-time").textContent = "@" + beats + " — " + normalTime;
+        }
+        setInterval(updateSwatchInternetTime, 1000);
+        window.onload = updateSwatchInternetTime;
+
+        function changeFaviconColor() {
+            const favicon = document.getElementById("favicon");
+            const canvas = document.createElement("canvas");
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext("2d");
+            const color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, 32, 32);
+            favicon.href = canvas.toDataURL("image/png");
+        }
+        setInterval(changeFaviconColor, 3000);
+        window.onload = function() {
+            changeFaviconColor();
+            changeKaomojiColor();
+        };
+            function changeKaomojiColor() {
+            const kaomoji = document.getElementById("kaomoji");
+            const color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+            kaomoji.style.color = color;
+        }
+        setInterval(changeKaomojiColor, 3000);
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div id="kaomoji">ଘ(੭´꒳`)°* ੈ‧₊˚</div>
+        <div class="links">
+            <a href="mailto:l.benkhedda@gmail.com">Email</a>,
+            <a href="https://www.instagram.com/451_232/" target="_blank">Instagram</a>,
+            <a href="https://www.are.na/leith-benkhedda/index" target="_blank">Are.na</a>
+        </div>
+        <div id="internet-time" style="text-align: right;"></div>
+    </div>
+    <div class="bio">
+        <p>Leïth Benkhedda is a designer, researcher, service provider, and information age hunter-gatherer.<br>
+        Portfolio available upon request.</p>
+    </div>
+    <div class="mobile-links">
+        <a href="mailto:l.benkhedda@gmail.com">Email</a>,
+        <a href="https://www.instagram.com/451_232/" target="_blank">Instagram</a>,
+        <a href="https://www.are.na/leith-benkhedda/index" target="_blank">Are.na</a>
+    </div>
+    <div class="footer">
+        w/<br>
+        Dazed, Balenciaga, Jenna Sutella, 33, Trust, New Models, Black Swan, FWB, 0xParc, TACo, Metalabel, Other Internet, SUB, Fred Perry, Raf Simons, Royal Academy of Art, Sandberg Institute, Highlight, Pamela Rosenkranz, Random Studio, etc.
+    </div>
+</body>
+</html>
