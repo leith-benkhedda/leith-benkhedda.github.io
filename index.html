@@ -51,29 +51,139 @@
             padding: 15px;
             box-sizing: border-box;
         }
-        .footer span {
-            cursor: pointer;
-            position: relative;
-            display: inline-block;
+        .mobile-links {
+            display: none;
         }
+        @media (max-width: 600px) {
+            .header {
+                grid-template-columns: 1fr 1fr;
+            }
+            #internet-time {
+                text-align: right;
+                justify-self: end;
+            }
+            .links {
+                display: none;
+            }
+            .mobile-links {
+                display: block;
+                margin-top: 10px;
+            }
+        }
+        a:visited, a:hover, a:active {
+            color: black !important;
+            text-decoration: none !important;
+        }
+
+        /* Heart list animation */
         #heart-list {
             display: none;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
+            margin-top: 10px;
+        }
+
+        #heart-list.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Heart trigger animation */
+        .heart-trigger {
+            cursor: pointer;
+            display: inline-block;
+            animation: float 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        /* Smooth color transition for kaomoji */
+        #kaomoji {
+            transition: color 1s linear;
         }
     </style>
     <script>
-        function toggleHeart() {
-            const heartList = document.getElementById("heart-list");
+        // Define highly contrasting colors
+        const colors = [
+            '#FF0000',  // Red
+            '#00FF00',  // Lime
+            '#0000FF',  // Blue
+            '#FF00FF',  // Magenta
+            '#FFFF00',  // Yellow
+            '#00FFFF'   // Cyan
+        ];
+
+        let currentColorIndex = 0;
+
+        function updateSwatchInternetTime() {
+            const now = new Date();
+            const utcHours = now.getUTCHours();
+            const utcMinutes = now.getUTCMinutes();
+            const utcSeconds = now.getUTCSeconds();
             
-            if (heartList.style.display === "none" || heartList.style.opacity === "0") {
-                heartList.style.display = "block";
-                setTimeout(() => heartList.style.opacity = "1", 10);
-            } else {
-                heartList.style.opacity = "0";
-                setTimeout(() => heartList.style.display = "none", 500);
+            const totalSeconds = (utcHours * 3600) + (utcMinutes * 60) + utcSeconds + 3600;
+            const beats = ((totalSeconds / 86.4) % 1000).toFixed(2);
+            
+            const normalTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById("internet-time").textContent = "@" + beats + " • " + normalTime;
+
+            // Change color every second
+            if (utcSeconds !== lastSecond) {
+                lastSecond = utcSeconds;
+                currentColorIndex = (currentColorIndex + 1) % colors.length;
+                const color = colors[currentColorIndex];
+                
+                // Update kaomoji color with transition
+                document.getElementById("kaomoji").style.color = color;
+
+                // Update favicon
+                const favicon = document.getElementById("favicon");
+                const canvas = document.createElement("canvas");
+                canvas.width = 32;
+                canvas.height = 32;
+                const ctx = canvas.getContext("2d");
+                ctx.fillStyle = color;
+                ctx.fillRect(0, 0, 32, 32);
+                favicon.href = canvas.toDataURL("image/png");
             }
         }
+
+        let lastSecond = -1;
+
+        // Start the color updates when the page loads
+        window.onload = function() {
+            updateSwatchInternetTime();
+            setInterval(updateSwatchInternetTime, 50); // Update frequently to catch second changes
+        };
+
+        // Toggle heart list with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const heartTrigger = document.querySelector('.heart-trigger');
+            const heartList = document.getElementById('heart-list');
+            let isVisible = false;
+
+            heartTrigger.addEventListener('click', function() {
+                if (!isVisible) {
+                    heartList.style.display = 'block';
+                    heartList.offsetHeight; // Force reflow
+                    heartList.classList.add('visible');
+                } else {
+                    heartList.classList.remove('visible');
+                    setTimeout(() => {
+                        heartList.style.display = 'none';
+                    }, 500);
+                }
+                isVisible = !isVisible;
+            });
+        });
     </script>
 </head>
 <body>
@@ -96,7 +206,7 @@
         <a href="https://www.are.na/leith-benkhedda/index" target="_blank">Are.na</a>
     </div>
     <div class="footer">
-        <span id="heart" onclick="toggleHeart()">&lt;3</span>
+        <span class="heart-trigger">&lt;3</span>
         <div id="heart-list">
             Dazed<br>
             Balenciaga<br>
