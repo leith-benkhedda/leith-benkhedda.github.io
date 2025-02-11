@@ -51,68 +51,29 @@
             padding: 15px;
             box-sizing: border-box;
         }
-        .mobile-links {
+        .footer span {
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+        }
+        #heart-list {
             display: none;
-        }
-        @media (max-width: 600px) {
-            .header {
-                grid-template-columns: 1fr 1fr;
-            }
-            #internet-time {
-                text-align: right;
-                justify-self: end;
-            }
-            .links {
-                display: none;
-            }
-            .mobile-links {
-                display: block;
-                margin-top: 10px;
-            }
-        }
-        a:visited, a:hover, a:active {
-            color: black !important;
-            text-decoration: none !important;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
     </style>
     <script>
-        function updateSwatchInternetTime() {
-            const now = new Date();
-            const utcHours = now.getUTCHours();
-            const utcMinutes = now.getUTCMinutes();
-            const utcSeconds = now.getUTCSeconds();
+        function toggleHeart() {
+            const heartList = document.getElementById("heart-list");
             
-            const totalSeconds = (utcHours * 3600) + (utcMinutes * 60) + utcSeconds + 3600; // Adjust for Biel Mean Time (BMT) which is UTC+1
-            const beats = ((totalSeconds / 86.4) % 1000).toFixed(2);
-            
-            const normalTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById("internet-time").textContent = "@" + beats + " • " + normalTime;
+            if (heartList.style.display === "none" || heartList.style.opacity === "0") {
+                heartList.style.display = "block";
+                setTimeout(() => heartList.style.opacity = "1", 10);
+            } else {
+                heartList.style.opacity = "0";
+                setTimeout(() => heartList.style.display = "none", 500);
+            }
         }
-        setInterval(updateSwatchInternetTime, 1000);
-        window.onload = updateSwatchInternetTime;
-
-        function changeFaviconColor() {
-            const favicon = document.getElementById("favicon");
-            const canvas = document.createElement("canvas");
-            canvas.width = 32;
-            canvas.height = 32;
-            const ctx = canvas.getContext("2d");
-            const color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-            ctx.fillStyle = color;
-            ctx.fillRect(0, 0, 32, 32);
-            favicon.href = canvas.toDataURL("image/png");
-        }
-        setInterval(changeFaviconColor, 3000);
-        window.onload = function() {
-            changeFaviconColor();
-            changeKaomojiColor();
-        };
-            function changeKaomojiColor() {
-            const kaomoji = document.getElementById("kaomoji");
-            const color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-            kaomoji.style.color = color;
-        }
-        setInterval(changeKaomojiColor, 3000);
     </script>
 </head>
 <body>
@@ -135,7 +96,29 @@
         <a href="https://www.are.na/leith-benkhedda/index" target="_blank">Are.na</a>
     </div>
     <div class="footer">
-        <3
+        <span id="heart" onclick="toggleHeart()">&lt;3</span>
+        <div id="heart-list">
+            Dazed<br>
+            Balenciaga<br>
+            Raf Simons<br>
+            Fred Perry<br>
+            Highsnobiety<br>
+            33<br>
+            Trust<br>
+            New Models<br>
+            Black Swan<br>
+            Jenna Sutella<br>
+            Pamela Rosenkranz<br>
+            SUB<br>
+            Random Studio<br>
+            Metalabel<br>
+            Other Internet<br>
+            0xParc<br>
+            FWB<br>
+            Highlight<br>
+            KABK<br>
+            Sandberg Institute
+        </div>
     </div>
 </body>
 </html>
