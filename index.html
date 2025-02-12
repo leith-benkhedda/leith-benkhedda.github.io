@@ -9,7 +9,7 @@
         body {
             display: block;
             font-family: Arial, sans-serif;
-            font-size: 12pt;
+            font-size: 13pt;
             padding: 15px;
             margin: 0;
             box-sizing: border-box;
@@ -18,30 +18,30 @@
             height: 100vh;
         }
         .header {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            align-items: start;
+            display: flex;
+            align-items: center;
             width: 100%;
+            margin-bottom: 1.5em;
         }
-        .header div {
-            font-size: 12pt;
-        }
-        .links, .mobile-links {
-            text-align: left;
-            text-decoration: underline;
-        }
-        .links a, .mobile-links a {
+        .links a {
             text-decoration: none;
             color: black !important;
-            margin-right: 0px;
+            display: block;
+            line-height: normal;
             text-decoration: underline;
         }
         .bio {
-            max-width: 800px;
             padding-top: 0px;
         }
+        .bio p {
+            margin: 0 0 1.5em 0;
+            padding: 0;
+            line-height: normal;
+            word-wrap: break-word;
+            width: 100%;
+        }
         .footer {
-            font-size: 12pt;
+            font-size: 13pt;
             text-align: left;
             padding-bottom: 10px;
             width: 100%;
@@ -51,31 +51,11 @@
             padding: 15px;
             box-sizing: border-box;
         }
-        .mobile-links {
-            display: none;
-        }
-        @media (max-width: 600px) {
-            .header {
-                grid-template-columns: 1fr 1fr;
-            }
-            #internet-time {
-                text-align: right;
-                justify-self: end;
-            }
-            .links {
-                display: none;
-            }
-            .mobile-links {
-                display: block;
-                margin-top: 10px;
-            }
-        }
         a:visited, a:hover, a:active {
             color: black !important;
             text-decoration: none !important;
         }
 
-        /* Heart list animation */
         #heart-list {
             display: none;
             opacity: 0;
@@ -88,7 +68,6 @@
             opacity: 1;
         }
 
-        /* Heart trigger animation */
         .heart-trigger {
             cursor: pointer;
             display: inline-block;
@@ -105,26 +84,31 @@
             }
         }
 
-        /* Smooth color transition for kaomoji */
         #kaomoji {
             transition: color 1s linear;
+            white-space: pre;
+        }
+        
+        #internet-time {
+            margin-left: 0.5em;
         }
     </style>
     <script>
-        // Define highly contrasting colors
         const colors = [
-            '#FF0000',  // Red
-            '#00FF00',  // Lime
-            '#0000FF',  // Blue
-            '#FF00FF',  // Magenta
-            '#FFFF00',  // Yellow
-            '#00FFFF'   // Cyan
+            '#FF0000',
+            '#00FF00',
+            '#0000FF',
+            '#FF00FF',
+            '#FFFF00',
+            '#00FFFF'
         ];
 
         let currentColorIndex = 0;
+        let lastSecond = -1;
 
         function updateSwatchInternetTime() {
             const now = new Date();
+            const hours = now.getHours();
             const utcHours = now.getUTCHours();
             const utcMinutes = now.getUTCMinutes();
             const utcSeconds = now.getUTCSeconds();
@@ -133,7 +117,15 @@
             const beats = ((totalSeconds / 86.4) % 1000).toFixed(2);
             
             const normalTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById("internet-time").textContent = "@" + beats + " • " + normalTime;
+            document.getElementById("internet-time").textContent = "| @" + beats + " | " + normalTime;
+
+            // Update kaomoji based on time
+            const kaomoji = document.getElementById("kaomoji");
+            if (hours >= 9 && hours < 20) {
+                kaomoji.textContent = "ଘ(੭´꒳`)°* ੈ‧₊˚";
+            } else {
+                kaomoji.textContent = "(:3」∠)";
+            }
 
             // Change color every second
             if (utcSeconds !== lastSecond) {
@@ -141,10 +133,8 @@
                 currentColorIndex = (currentColorIndex + 1) % colors.length;
                 const color = colors[currentColorIndex];
                 
-                // Update kaomoji color with transition
-                document.getElementById("kaomoji").style.color = color;
+                kaomoji.style.color = color;
 
-                // Update favicon
                 const favicon = document.getElementById("favicon");
                 const canvas = document.createElement("canvas");
                 canvas.width = 32;
@@ -156,15 +146,11 @@
             }
         }
 
-        let lastSecond = -1;
-
-        // Start the color updates when the page loads
         window.onload = function() {
             updateSwatchInternetTime();
-            setInterval(updateSwatchInternetTime, 50); // Update frequently to catch second changes
+            setInterval(updateSwatchInternetTime, 50);
         };
 
-        // Toggle heart list with animation
         document.addEventListener('DOMContentLoaded', function() {
             const heartTrigger = document.querySelector('.heart-trigger');
             const heartList = document.getElementById('heart-list');
@@ -173,7 +159,7 @@
             heartTrigger.addEventListener('click', function() {
                 if (!isVisible) {
                     heartList.style.display = 'block';
-                    heartList.offsetHeight; // Force reflow
+                    heartList.offsetHeight;
                     heartList.classList.add('visible');
                 } else {
                     heartList.classList.remove('visible');
@@ -188,22 +174,17 @@
 </head>
 <body>
     <div class="header">
-        <div id="kaomoji">ଘ(੭´꒳`)°* ੈ‧₊˚</div>
-        <div class="links">
-            <a href="mailto:l.benkhedda@gmail.com">Email</a>,
-            <a href="https://www.instagram.com/451_232/" target="_blank">Instagram</a>,
-            <a href="https://www.are.na/leith-benkhedda/index" target="_blank">Are.na</a>
-        </div>
-        <div id="internet-time" style="text-align: right;"></div>
+        <span id="kaomoji">ଘ(੭´꒳`)°* ੈ‧₊˚ </span>
+        <span id="internet-time"></span>
     </div>
     <div class="bio">
-        <p>Leïth Benkhedda is a designer, researcher, service provider, and information age hunter-gatherer.<br>
-        Portfolio available upon request.</p>
-    </div>
-    <div class="mobile-links">
-        <a href="mailto:l.benkhedda@gmail.com">Email</a>,
-        <a href="https://www.instagram.com/451_232/" target="_blank">Instagram</a>,
-        <a href="https://www.are.na/leith-benkhedda/index" target="_blank">Are.na</a>
+        <p>Leïth Benkhedda<br>Designer, researcher, service provider, information age hunter-gatherer.</p>
+        <p>Portfolio available upon request.</p>
+        <div class="links">
+            <a href="mailto:l.benkhedda@gmail.com">Email</a>
+            <a href="https://www.instagram.com/451_232/" target="_blank">Instagram</a>
+            <a href="https://www.are.na/leith-benkhedda/index" target="_blank">Are.na</a>
+        </div>
     </div>
     <div class="footer">
         <span class="heart-trigger">&lt;3</span>
@@ -219,8 +200,6 @@
             Black Swan<br>
             Jenna Sutella<br>
             Pamela Rosenkranz<br>
-            SUB<br>
-            Random Studio<br>
             Metalabel<br>
             Other Internet<br>
             0xParc<br>
